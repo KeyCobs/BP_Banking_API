@@ -8,8 +8,8 @@ namespace BP_Banking_API.Controllers
     [Route("User")]
     public class UserController : Controller
     {
-        private IUserDataContext _dataUser;
-        public UserController(IUserDataContext datauser)
+        private IBankingContext _dataUser;
+        public UserController(IBankingContext datauser)
         {
             _dataUser = datauser;
             
@@ -18,7 +18,13 @@ namespace BP_Banking_API.Controllers
         [HttpGet("{id}")]
         public ActionResult<User> Get(int id)
         {
-            return Ok(_dataUser.GetUserInfo(id));
+            return Ok(_dataUser.GetUserById(id));
+        }
+        [HttpGet]
+        [Route("Users/NumberOfUsers")]
+        public ActionResult<int> GetTotalUsers()
+        {
+            return Ok(_dataUser.GetAmountOfUsers());
         }
         [HttpGet]
         public ActionResult<IEnumerable<User>> Get()
@@ -31,6 +37,13 @@ namespace BP_Banking_API.Controllers
         {
             _dataUser.AddUser(u);
             return Ok(u.FullName + " is added");
+        }
+        [HttpDelete]
+        public ActionResult<User> Delete(int id)
+        {
+            User u = _dataUser.GetUserById(id);
+            _dataUser.DeleteUserById(id);
+            return Ok(u.FullName + " was deleted");
         }
     }
 }

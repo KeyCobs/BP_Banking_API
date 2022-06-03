@@ -1,15 +1,14 @@
 ﻿using BP_Banking_API.Models;
 using LiteDB;
-using System.Collections.Generic;
 
 namespace BP_Banking_API.Data
 {
-    public class UserDataBase : IUserDataContext
+    public class BankingDataBase : IBankingContext
     {
         public LiteDatabase dbUser = new LiteDatabase(@"DataBase/userDB.db");
         public LiteDatabase dbBank = new LiteDatabase(@"DataBase/dbBank.db");
-        
 
+        #region User
         #region Post
         public void AddUser(User u)
         {
@@ -18,9 +17,12 @@ namespace BP_Banking_API.Data
             CreateUserAccount(u.BankID,user.ID);
         }
         #endregion
-
         #region Get
-        public User GetUserInfo(int id)
+        public int GetAmountOfUsers()
+        {
+            return dbUser.GetCollection<User>("Users").FindAll().Count();
+        }
+        public User GetUserById(int id)
         {
             User temp = dbUser.GetCollection<User>("Users").FindById(id);
             temp.Password = "";
@@ -34,7 +36,13 @@ namespace BP_Banking_API.Data
             return dbUser.GetCollection<User>("Users").FindAll();
         }
         #endregion
-
+        #region Delete
+        public void DeleteUserById(int id)
+        {
+            dbUser.GetCollection<User>("Users").Delete(id);
+        }
+        #endregion
+        #endregion
         #region Bank
         #region Post
         public void AddBank(Bank b)
@@ -60,12 +68,37 @@ namespace BP_Banking_API.Data
         }
         #endregion
         #region Put
+        public int GetAmountOfBanks()
+        {
+            return dbBank.GetCollection<Bank>("Banks").FindAll().Count();
+        }
+        public int GetAmountOfUsersOfBankById(int id)
+        {
+            Bank b = dbBank.GetCollection<Bank>("Banks").FindById(id);
+            return b.UserIdAndMoney.Count();
+        }
+        public void TransferMoney(int fromUserId, int toUserId, int amount)
+        {
+            Bank fub = GetBankById(GetUserById(fromUserId).BankID);
+            Bank tub = GetBankById(GetUserById(toUserId).BankID);
+            fub.UserIdAndMoney[fromUserId] -= amount;
+            tub.UserIdAndMoney[toUserId] += amount;
+            dbBank.GetCollection<Bank>("Banks").Update(fub);
+            dbBank.GetCollection<Bank>("Banks").Update(tub);
+        }
         public void CreateUserAccount(int bankId, int userID)
         {
+            Random rand = new Random();
             Bank b = dbBank.GetCollection<Bank>("Banks").FindById(bankId);
-            b.UserIdAndMoney.Add(userID,0);
+            b.UserIdAndMoney.Add(userID,rand.Next(100000));
             dbBank.GetCollection<Bank>("Banks").Update(bankId, b);
            
+        }
+        #endregion
+        #region Delete
+        public void DeletebankById(int id)
+        {
+            dbBank.GetCollection<Bank>("Banks").Delete(id);
         }
         #endregion
         #endregion

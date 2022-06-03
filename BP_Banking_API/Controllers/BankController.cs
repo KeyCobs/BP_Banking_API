@@ -8,8 +8,8 @@ namespace BP_Banking_API.Controllers
     [Route("Bank")]
     public class BankController : Controller
     {
-        private IUserDataContext _dataUser;
-        public BankController(IUserDataContext datauser)
+        private IBankingContext _dataUser;
+        public BankController(IBankingContext datauser)
         {
             _dataUser = datauser;
 
@@ -25,14 +25,40 @@ namespace BP_Banking_API.Controllers
         {
             return Ok(_dataUser.GetBankById(id));
         }
+        [HttpGet]
+        [Route("bank/amountofbanks")]
+        public ActionResult<int> GetNumberOfBanks()
+        {
+            return Ok(_dataUser.GetAmountOfBanks());
+        }
+        [HttpGet]
+        [Route("bank/numberofusers")]
+        public ActionResult<Bank> GetNumberofUsersInBank(int id)
+        {
+            return Ok(_dataUser.GetAmountOfUsersOfBankById(id));
+        }
+
         [HttpPost]
-        public ActionResult<Bank> Post(string n)
+        public ActionResult<Bank> Post(string name)
         {
 
             Bank bank = new Bank();
-            bank.Name = n;
+            bank.Name = name;
             _dataUser.AddBank(bank);
-            return Ok(n + " was added");
+            return Ok(name + " was added");
+        }
+        [HttpPut]
+        public ActionResult<Bank> Put(int sendId, int recieveId, int amount)
+        {
+            _dataUser.TransferMoney(sendId, recieveId, amount);
+            return Ok("Money was transferd");
+        }
+        [HttpDelete]
+        public ActionResult<Bank> Delete(int id)
+        {
+            Bank b = _dataUser.GetBankById(id);
+            _dataUser.DeletebankById(id);
+            return Ok(b.Name + " Was Deleted");
         }
     }
 }

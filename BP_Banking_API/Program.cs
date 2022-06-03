@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title ="Banking Thomas More API", Version = "v1" });
 });
 
-builder.Services.AddSingleton(typeof(IUserDataContext), typeof(UserDataBase));
+builder.Services.AddSingleton(typeof(IBankingContext), typeof(BankingDataBase));
 
 var app = builder.Build();
 
