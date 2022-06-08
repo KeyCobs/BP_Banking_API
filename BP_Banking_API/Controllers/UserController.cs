@@ -32,6 +32,13 @@ namespace BP_Banking_API.Controllers
             return Ok(_dataUser.GetAllUsersWithAllInfo());
             
         }
+        [HttpGet]
+        [Route("passwordCheck")]
+        public ActionResult<bool> Get(string p, string e)
+        {
+            return Ok(_dataUser.PasswordCheck(p,e));
+
+        }
         [HttpPost]
         public ActionResult<User> Post([FromBody] User u)
         {

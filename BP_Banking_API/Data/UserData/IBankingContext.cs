@@ -16,6 +16,7 @@ namespace BP_Banking_API.Data
         public void DeleteUserById(int id);
         #endregion
         #region Get
+        public bool PasswordCheck(string password, string email);
         public int GetAmountOfUsers();
         User GetUserById(int id);
         IEnumerable<User> GetAllUsersWithAllInfo();

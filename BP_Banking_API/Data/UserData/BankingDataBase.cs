@@ -18,6 +18,12 @@ namespace BP_Banking_API.Data
         }
         #endregion
         #region Get
+        public bool PasswordCheck(string password, string email)
+        {
+            User u = dbUser.GetCollection<User>("Users").FindOne(item => item.Email.Equals(email));
+            if (u == null) return false;
+            return u.Password == password;
+        }
         public int GetAmountOfUsers()
         {
             return dbUser.GetCollection<User>("Users").FindAll().Count();
