@@ -27,6 +27,7 @@ namespace BP_Banking_API.Controllers
             return Ok(_dataUser.GetAmountOfUsers());
         }
         [HttpGet]
+        [Route("UserInfo")]
         public ActionResult<IEnumerable<User>> Get()
         {
             return Ok(_dataUser.GetAllUsersWithAllInfo());
@@ -40,12 +41,14 @@ namespace BP_Banking_API.Controllers
 
         }
         [HttpPost]
+        [Route("AddUser")]
         public ActionResult<User> Post([FromBody] User u)
         {
             _dataUser.AddUser(u);
             return Ok(u.FullName + " is added");
         }
         [HttpDelete]
+        [Route("DeleteUser")]
         public ActionResult<User> Delete(int id)
         {
             User u = _dataUser.GetUserById(id);

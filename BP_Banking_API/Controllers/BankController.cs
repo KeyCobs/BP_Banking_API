@@ -26,19 +26,20 @@ namespace BP_Banking_API.Controllers
             return Ok(_dataUser.GetBankById(id));
         }
         [HttpGet]
-        [Route("bank/amountofbanks")]
+        [Route("amountOfBanks")]
         public ActionResult<int> GetNumberOfBanks()
         {
             return Ok(_dataUser.GetAmountOfBanks());
         }
         [HttpGet]
-        [Route("bank/numberofusers")]
+        [Route("numberOfUsersInBank")]
         public ActionResult<Bank> GetNumberofUsersInBank(int id)
         {
             return Ok(_dataUser.GetAmountOfUsersOfBankById(id));
         }
 
         [HttpPost]
+        [Route("AddBank")]
         public ActionResult<Bank> Post(string name)
         {
 
@@ -48,12 +49,14 @@ namespace BP_Banking_API.Controllers
             return Ok(name + " was added");
         }
         [HttpPut]
+        [Route("TransferMoney")]
         public ActionResult<Bank> Put(int sendId, int recieveId, int amount)
         {
             _dataUser.TransferMoney(sendId, recieveId, amount);
             return Ok("Money was transferd");
         }
         [HttpDelete]
+        [Route("DeleteBank")]
         public ActionResult<Bank> Delete(int id)
         {
             Bank b = _dataUser.GetBankById(id);
